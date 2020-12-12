@@ -1,0 +1,5 @@
+.img {}
+.img__inline {
+    display: inline;
+    margin: 0;
+}
