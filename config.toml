@@ -25,7 +25,7 @@ pygmentsCodefencesGuessSyntax = true
 unsafe = true
 
 [params]
-description = "Geek's blog about Software Engineering, Artificial Intelegence and science"
+description = "Geek's blog about Software Engineering, Artificial Intelligence and science"
 profilePicture = "static/images/profile.jpg"
 keywords = ""
 favicon = "favicons/"
