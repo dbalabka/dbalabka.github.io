@@ -3,20 +3,20 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://dmitry.balabka.com/about/</loc>
+    <loc>https://dmitry.balabka.com/about/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://dmitry.balabka.com/categories/</loc>
+    <loc>https://dmitry.balabka.com/categories/</loc>
   </url>
   
   <url>
-    <loc>http://dmitry.balabka.com/</loc>
+    <loc>https://dmitry.balabka.com/</loc>
   </url>
   
   <url>
-    <loc>http://dmitry.balabka.com/tags/</loc>
+    <loc>https://dmitry.balabka.com/tags/</loc>
   </url>
   
 </urlset>

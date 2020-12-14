@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Dmitry Balabka</title>
-    <link>http://dmitry.balabka.com/tags/</link>
+    <link>https://dmitry.balabka.com/tags/</link>
     <description>Recent content in Tags on Dmitry Balabka</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="http://dmitry.balabka.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language><atom:link href="https://dmitry.balabka.com/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
