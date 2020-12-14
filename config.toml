@@ -1,4 +1,4 @@
-baseURL = "http://dmitry.balabka.com/"
+baseURL = "https://dmitry.balabka.com/"
 languageCode = "en"
 #theme = "anatole"
 theme = "hyde"
