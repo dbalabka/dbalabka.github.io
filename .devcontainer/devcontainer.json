@@ -1,0 +1,33 @@
+{
+	"name": "Personal blog",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node",
+
+    "customizations": {
+        // Configure properties specific to VS Code.
+        "vscode": {
+            // Set *default* container specific settings.json values on container create.
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "zsh (login)": {
+                        "path": "zsh",
+                        "args": ["-l"]
+                    }
+                }
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+				"ms-azuretools.vscode-docker",
+				"github.codespaces",
+				"github.vscode-github-actions",
+				"ms-vscode.vscode-typescript-next",
+				"ms-vscode-remote.vscode-remote-extensionpack",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"dbaeumer.vscode-eslint"
+			]
+        }
+    },
+
+	"forwardPorts": [3000],
+    "remoteUser": "vscode"
+
+}

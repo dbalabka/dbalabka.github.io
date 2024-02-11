@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "ms-azuretools.vscode-docker",
+        "github.codespaces",
+        "github.vscode-github-actions",
+        "ms-vscode.vscode-typescript-next",
+        "ms-vscode-remote.vscode-remote-extensionpack",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "dbaeumer.vscode-eslint"
+    ]
+}
