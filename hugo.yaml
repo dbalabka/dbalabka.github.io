@@ -18,7 +18,7 @@ markup:
   goldmark:
     renderer:
       unsafe: true
-      
+
 params:
 
   env: development 
@@ -71,7 +71,8 @@ params:
   ShowBreadCrumbs: true
 
   keywords: ""
-  favicon: favicons/
+  assets:
+    favicon: "favicon.svg"
   customCss:
     - static/css/main.css
   customJs: []
