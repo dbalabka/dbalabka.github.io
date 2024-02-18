@@ -1,1 +1,3 @@
 User-agent: *
+Disallow:
+Sitemap: https://dmitry.balabka.com/sitemap.xml
