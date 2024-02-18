@@ -9,6 +9,7 @@
         "dbaeumer.vscode-eslint",
         "github.copilot-chat",
         "github.copilot",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "k--kato.intellij-idea-keybindings"
     ]
 }

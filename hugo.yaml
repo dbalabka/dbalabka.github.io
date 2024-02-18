@@ -1,7 +1,7 @@
 baseURL: "https://dmitry.balabka.com/"
 languageCode: en
 theme: PaperMod
-title: Dmitry Balabka
+title: DBlog
 author: Dmitry Balabka
 summarylength: 10
 enableEmoji: true
@@ -9,10 +9,16 @@ enableRobotsTXT: true
 pygmentsUseClasses: true
 pygmentsCodeFences: true
 pygmentsCodefencesGuessSyntax: true
+
+paginate: 50
+
+mainsections: ["presentations", "posts"]
+
 markup:
   goldmark:
     renderer:
       unsafe: true
+      
 params:
 
   env: development 
@@ -25,13 +31,13 @@ params:
       Lead Data Scientist and Machine Learning Engineer in Ecentria Group, a medium-size US e-commerce.
     imageUrl: "https://gravatar.com/userimage/34319433/0e83d173c7c89f3eff94693f0c08e3fa.jpeg?size=2048" # optional
     imageTitle: "Dmitrijs Balabka" # optional
-    imageWidth: 120 # custom size
-    imageHeight: 120 # custom size
-    buttons:
-      - name: Archive
-        url: "/archive"
-      - name: Github
-        url: "https://github.com/"
+    imageWidth: 200 # custom size
+    imageHeight: 200 # custom size
+    # buttons:
+    #   - name: Archive
+    #     url: "/archive"
+    #   - name: Github
+    #     url: "https://github.com/"
 
   homeInfoParams:
     Title: Dmitry Balabka
@@ -41,7 +47,7 @@ params:
 
   socialIcons:
     - name: Linkedin
-      url: https://github.com/dbalabka
+      url: https://www.linkedin.com/in/dmitrybalabka/
     - name: GoogleScholar
       url: https://scholar.google.com/citations?user=brb8-9YAAAAJ&hl=en
     - name: Github
@@ -62,6 +68,8 @@ params:
   defaultTheme: auto
   disableThemeToggle: true
 
+  ShowBreadCrumbs: true
+
   keywords: ""
   favicon: favicons/
   customCss:
@@ -73,8 +81,13 @@ params:
     - images/site-feature-image.png
   doNotLoadAnimations: false
   math:
-    enable: false
+    enable: true
     use: katex
+
+  editPost:
+    URL: "https://github.com/dbalabka/dbalabka.github.io/edit/main/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
 
 services:
   googleAnalytics:
@@ -82,15 +95,14 @@ services:
 
 menu:
   main:
-    - name: Posts
+    - name: Home
+      weight: 100
+      url: /
+    - name: Presentations
       weight: 200
-      identifier: posts
-      url: /post/
-    - name: About
+      identifier: presentations
+      url: /presentations/
+    - name: Posts
       weight: 300
-      identifier: about
-      url: /about/
-    - name: Contact
-      weight: 400
-      identifier: contact
-      url: /contact/
+      identifier: posts
+      url: /posts/

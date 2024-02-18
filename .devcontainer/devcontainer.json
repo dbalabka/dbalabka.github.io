@@ -26,7 +26,8 @@
 				"GitHub.copilot-chat",
 				"GitHub.copilot",
 				"budparr.language-hugo-vscode",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"k--kato.intellij-idea-keybindings"
 			]
         }
     },
