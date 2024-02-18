@@ -22,7 +22,11 @@
 				"ms-vscode.vscode-typescript-next",
 				"ms-vscode-remote.vscode-remote-extensionpack",
 				"VisualStudioExptTeam.vscodeintellicode",
-				"dbaeumer.vscode-eslint"
+				"dbaeumer.vscode-eslint",
+				"GitHub.copilot-chat",
+				"GitHub.copilot",
+				"budparr.language-hugo-vscode",
+				"tamasfe.even-better-toml"
 			]
         }
     },

@@ -1,0 +1,89 @@
+baseURL: "https://dmitry.balabka.com/"
+languageCode: en
+theme: PaperMod
+title: Dmitry Balabka
+author: Dmitry Balabka
+summarylength: 10
+enableEmoji: true
+enableRobotsTXT: true
+pygmentsUseClasses: true
+pygmentsCodeFences: true
+pygmentsCodefencesGuessSyntax: true
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+params:
+
+  profileMode:
+    enabled: true
+    title: "Dmitrijs Balabka"
+    subtitle: >
+      M.Sc. in Computer Science, +10 years experience in Web development, Software Architect and 
+      Lead Data Scientist and Machine Learning Engineer in Ecentria Group, a medium-size US e-commerce.
+    imageUrl: "https://gravatar.com/userimage/34319433/0e83d173c7c89f3eff94693f0c08e3fa.jpeg?size=2048" # optional
+    imageTitle: "Dmitrijs Balabka" # optional
+    imageWidth: 120 # custom size
+    imageHeight: 120 # custom size
+    buttons:
+      - name: Archive
+        url: "/archive"
+      - name: Github
+        url: "https://github.com/"
+
+  homeInfoParams:
+    Title: Dmitry Balabka
+    Content: >
+      M.Sc. in Computer Science, +10 years experience in Web development, Software Architect and 
+      Lead Data Scientist and Machine Learning Engineer in Ecentria Group, a medium-size US e-commerce.
+
+  socialIcons:
+    - name: Linkedin
+      url: https://github.com/dbalabka
+    - name: GoogleScholar
+      url: https://scholar.google.com/citations?user=brb8-9YAAAAJ&hl=en
+    - name: Github
+      url: https://github.com/dbalabka
+    - name: Twitter
+      url: https://twitter.com/dmitrybalabka
+    - name: email
+      url: mailto:dmitry.balabka@gmail.com
+    - name: CV
+      url: https://bit.ly/mle-dmitry-balabka-cv
+
+  description: Geek's blog about Software Engineering, Artificial Intelligence and science
+  profilePicture: static/images/profile.jpg
+
+  # Night/Day mode
+  defaultTheme: auto
+  disableThemeToggle: true
+
+  keywords: ""
+  favicon: favicons/
+  customCss:
+    - static/css/main.css
+  customJs: []
+  mainSections:
+    - post
+  images:
+    - images/site-feature-image.png
+  doNotLoadAnimations: false
+  math:
+    enable: false
+    use: katex
+
+
+menu:
+  main:
+    - name: Posts
+      weight: 200
+      identifier: posts
+      url: /post/
+    - name: About
+      weight: 300
+      identifier: about
+      url: /about/
+    - name: Contact
+      weight: 400
+      identifier: contact
+      url: /contact/

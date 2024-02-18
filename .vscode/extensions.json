@@ -6,6 +6,9 @@
         "ms-vscode.vscode-typescript-next",
         "ms-vscode-remote.vscode-remote-extensionpack",
         "VisualStudioExptTeam.vscodeintellicode",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "github.copilot-chat",
+        "github.copilot",
+        "tamasfe.even-better-toml"
     ]
 }
