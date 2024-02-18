@@ -15,6 +15,8 @@ markup:
       unsafe: true
 params:
 
+  env: development 
+
   profileMode:
     enabled: true
     title: "Dmitrijs Balabka"
@@ -54,6 +56,8 @@ params:
   description: Geek's blog about Software Engineering, Artificial Intelligence and science
   profilePicture: static/images/profile.jpg
 
+  googleAnalytics: G-KDN1DE34JE
+
   # Night/Day mode
   defaultTheme: auto
   disableThemeToggle: true
@@ -72,6 +76,9 @@ params:
     enable: false
     use: katex
 
+services:
+  googleAnalytics:
+    ID: G-KDN1DE34JE
 
 menu:
   main:

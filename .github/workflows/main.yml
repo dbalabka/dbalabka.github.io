@@ -27,7 +27,7 @@ jobs:
         with:
           submodules: true # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0   # Fetch all history for .GitInfo and .Lastmod
-        
+
       - name: Hugo setup
         # You may pin to the exact commit or the version.
         # uses: peaceiris/actions-hugo@2e89aa66d0093e4cd14751b3028fc1a179452c2e
@@ -39,7 +39,14 @@ jobs:
           #extended: true # optional, default is false
           
       - name: Build
-        run: hugo --minify
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+
+        run: |
+          hugo \
+          --gc \
+          --minify
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
