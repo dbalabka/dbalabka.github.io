@@ -97,6 +97,10 @@ menu:
       weight: 200
       identifier: presentations
       url: /presentations/
+    - name: Publications
+      weight: 200
+      identifier: publications
+      url: /presentations/
     - name: Posts
       weight: 300
       identifier: posts
