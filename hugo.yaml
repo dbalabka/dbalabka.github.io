@@ -100,7 +100,7 @@ menu:
     - name: Publications
       weight: 200
       identifier: publications
-      url: /presentations/
+      url: /publications/
     - name: Posts
       weight: 300
       identifier: posts
