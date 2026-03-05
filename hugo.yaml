@@ -29,7 +29,7 @@ params:
     subtitle: >
       M.Sc. in Computer Science, +10 years experience in Web development, Software Architect and 
       Lead Data Scientist and Machine Learning Engineer in Ecentria Group, a medium-size US e-commerce.
-    imageUrl: "https://gravatar.com/userimage/34319433/0e83d173c7c89f3eff94693f0c08e3fa.jpeg?size=2048"
+    imageUrl: "https://www.gravatar.com/avatar/b2151ae9f3afd05e042047fbd0462499?s=2048"
     imageTitle: "Dmitrijs Balabka"
     imageWidth: 200
     imageHeight: 200
@@ -40,7 +40,7 @@ params:
     #     url: "https://github.com/"
 
   description: Geek's blog about Software Engineering, Artificial Intelligence and science
-  profilePicture: https://gravatar.com/userimage/34319433/0e83d173c7c89f3eff94693f0c08e3fa.jpeg?size=2048
+  profilePicture: https://www.gravatar.com/avatar/b2151ae9f3afd05e042047fbd0462499?s=2048
 
   socialIcons:
     - name: Linkedin
