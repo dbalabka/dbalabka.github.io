@@ -99,41 +99,60 @@ However, using a DI library without architectural guidelines can lead to new ant
 
 ## Best Practice 1: Keep Container Configuration Centralized in `di.py` (Composition Root)
 
-Always configure your DI container in a single, dedicated module (typically named `di.py` or `core/di.py`). This serves as the **Composition Root** of your application—the single location where the object graph is composed.
+Always configure your DI container in a single, dedicated module (typically named `di.py` or `core/di.py`). This serves as the **Composition Root** of your application—the single location where the entire object graph is composed.
+
+In `di.py`, use `@inject.autoparams` **only** on provider functions that construct your dependencies. This keeps your actual domain and service classes free of framework decorators, while allowing the container to automatically resolve constructor arguments for provider functions.
 
 ```python
 # app/di.py
 import inject
+
 from app.infrastructure.db import Database, PostgresDatabase
 from app.infrastructure.email import EmailClient, SmtpEmailClient
 from app.services.user_service import UserService
-from app.core.config import Settings
+from app.core.config import Settings, get_settings
 
-def configure_di(settings: Settings) -> None:
-    def config(binder: inject.Binder) -> None:
-        # 1. Bind configuration / singletons
-        binder.bind(Settings, settings)
-        
-        # 2. Bind abstract interfaces to concrete implementations (singletons or factories)
-        binder.bind_to_constructor(Database, lambda: PostgresDatabase(settings.DB_URL))
-        binder.bind_to_constructor(EmailClient, lambda: SmtpEmailClient(settings.SMTP_HOST))
-        
-        # 3. Bind application services (automatic wiring via constructor)
-        binder.bind_to_constructor(
-            UserService,
-            lambda: UserService(
-                db=inject.instance(Database),
-                email=inject.instance(EmailClient),
-            ),
-        )
 
-    inject.configure(config, once=True)
+@inject.autoparams()
+def provide_database(settings: Settings) -> Database:
+    return PostgresDatabase(settings.DB_URL)
+
+
+@inject.autoparams()
+def provide_email_client(settings: Settings) -> EmailClient:
+    return SmtpEmailClient(settings.SMTP_HOST)
+
+
+@inject.autoparams()
+def provide_user_service(db: Database, email: EmailClient) -> UserService:
+    return UserService(db=db, email=email)
+
+
+def configure(binder: inject.Binder) -> None:
+    # 1. Bind configuration / value objects
+    binder.bind_to_constructor(Settings, get_settings)
+
+    # 2. Bind interfaces and services to their providers
+    binder.bind_to_constructor(Database, provide_database)
+    binder.bind_to_constructor(EmailClient, provide_email_client)
+    binder.bind_to_constructor(UserService, provide_user_service)
+
+
+# Configure container on module import
+inject.configure(configure, once=True, bind_in_runtime=False)
 ```
 
-### Why this matters:
-- Your dependency graph is visible in one place.
-- You avoid circular imports between domain logic and infrastructural glue.
-- Swapping an implementation (e.g., swapping `SmtpEmailClient` for `SendGridEmailClient`) requires editing a single line in `di.py`.
+### Why this design is so effective:
+- **`@inject.autoparams` only on providers:** The provider functions handle wiring via type hints, while `UserService`, `PostgresDatabase`, and `SmtpEmailClient` remain pure, decoupled classes.
+- **`bind_in_runtime=False`:** Disables uncontrolled, implicit runtime auto-binding for unregistered types, ensuring your container fail-fast if a binding is missing.
+- **`once=True`:** Ensures that multiple imports or reloading don't raise configuration errors.
+- **Self-initializing module:** By running `inject.configure(...)` at the module level and re-exporting `inject`, consumers simply import `inject` from `app.di`, guaranteeing the container is always ready:
+
+```python
+from app.di import inject
+
+user_service = inject.instance(UserService)
+```
 
 ---
 
@@ -155,7 +174,7 @@ class UserService:
 ### Why avoid decorators on service classes?
 1. **Framework Decoupling:** Your business logic should be composed of **POPOs (Plain Old Python Objects)**. If you ever switch DI libraries or run code in a standalone script, your domain classes shouldn't fail because `inject` is imported.
 2. **Seamless Unit Testing:** A pure constructor allows you to instantiate `UserService(mock_db, mock_email)` in tests without initializing or resetting any DI container.
-3. **Explicit Contracts:** Keep constructors standard and predictable. Let the container in `di.py` handle wiring.
+3. **Explicit Contracts:** Keep constructors standard and predictable. Let the container provider functions in `di.py` handle wiring.
 
 ---
 
@@ -164,6 +183,8 @@ class UserService:
 In `python-inject`, you request an instance using `inject.instance(Cls)`:
 
 ```python
+from app.di import inject
+
 user_service = inject.instance(UserService)
 ```
 
@@ -187,14 +208,14 @@ The golden rule is: **Never call `inject.instance()` inside services or domain m
 
 ## Best Practice 4: FastAPI Integration
 
-In FastAPI, routes act as the entry point into your application layer. You can integrate `python-inject` cleanly in one of two ways.
+In FastAPI, routes act as the entry point into your application layer. Always import `inject` from `app.di` to ensure the container is initialized:
 
 ### Option A: Directly in Route Handlers
 
 ```python
 # app/api/routers/users.py
 from fastapi import APIRouter, HTTPException, status
-import inject
+from app.di import inject
 from app.services.user_service import UserService
 from app.api.schemas import UserCreate, UserResponse
 
@@ -214,7 +235,7 @@ If you want to maintain FastAPI's idiomatic dependency declarations in OpenAPI d
 ```python
 # app/api/dependencies.py
 from fastapi import Depends
-import inject
+from app.di import inject
 from app.services.user_service import UserService
 
 def get_user_service() -> UserService:
@@ -239,7 +260,7 @@ Consider a CLI tool built with [Typer](https://typer.tiangolo.com/):
 ```python
 # app/cli/commands.py
 import typer
-import inject
+from app.di import inject
 from app.services.user_service import UserService
 
 cli = typer.Typer()
@@ -259,7 +280,7 @@ def sync_users():
     typer.echo(f"Synchronized {count} users.")
 ```
 
-Notice how clean the command handler is. The CLI entry point initializes `di.configure_di()` on startup, and commands simply request their top-level service from the container.
+Notice how clean the command handler is. Importing `from app.di import inject` automatically guarantees container configuration, and commands simply request their top-level service from the container.
 
 ---
 
