@@ -284,7 +284,103 @@ Notice how clean the command handler is. Importing `from app.di import inject` a
 
 ---
 
-## Best Practice 6: Frictionless Testing
+## Best Practice 6: Multiple Instances of the Same Class and Custom Scalars with `typing.NewType`
+
+Because Python DI containers map dependencies by type annotations, a common challenge arises when your application requires **multiple instances of the exact same class** or needs to inject **primitive scalar values**.
+
+### The Problem: Ambiguous Type Keys
+Consider an application using **SQLAlchemy** with a master-replica setup:
+- A primary database engine for writes (`create_engine(...)`)
+- A read-only replica engine for heavy queries and reports (`create_engine(...)`)
+
+Both instances share the same type: `sqlalchemy.Engine`. Similarly, if you want to inject primitive scalar configuration parameters—such as a database URL (`str`), an API secret key (`str`), or a cache timeout in seconds (`int`)—relying on raw built-in types like `str` or `int` makes it impossible for `inject` to differentiate between them.
+
+Falling back to magic string keys (e.g., `@inject.params(db="replica_db")`) sacrifices type safety, breaks IDE autocomplete, and easily leads to runtime errors.
+
+### The Solution: `typing.NewType`
+The Python standard library provides `typing.NewType`. It creates distinct, semantic types with zero runtime overhead while providing a unique identity token for static type checkers (Mypy, Pyright) and runtime DI containers alike.
+
+```python
+from typing import NewType
+from sqlalchemy import Engine
+
+# Distinct types for multiple instances of SQLAlchemy Engine
+PrimaryEngine = NewType("PrimaryEngine", Engine)
+ReplicaEngine = NewType("ReplicaEngine", Engine)
+
+# Distinct types for scalar configuration parameters
+PrimaryDbUrl = NewType("PrimaryDbUrl", str)
+ReplicaDbUrl = NewType("ReplicaDbUrl", str)
+CacheTimeoutSeconds = NewType("CacheTimeoutSeconds", int)
+```
+
+### Wiring Multiple Instances in `di.py`
+
+Here is how you cleanly wire multiple SQLAlchemy engines and custom scalars in `di.py`:
+
+```python
+# app/di.py
+from typing import NewType
+from sqlalchemy import Engine, create_engine
+import inject
+
+from app.core.config import Settings, get_settings
+
+# 1. Define unique types
+PrimaryEngine = NewType("PrimaryEngine", Engine)
+ReplicaEngine = NewType("ReplicaEngine", Engine)
+
+
+# 2. Define providers for each specific instance
+@inject.autoparams()
+def provide_primary_engine(settings: Settings) -> PrimaryEngine:
+    engine = create_engine(settings.PRIMARY_DB_URL, pool_size=10, pool_pre_ping=True)
+    return PrimaryEngine(engine)
+
+
+@inject.autoparams()
+def provide_replica_engine(settings: Settings) -> ReplicaEngine:
+    engine = create_engine(settings.REPLICA_DB_URL, pool_size=30, pool_pre_ping=True)
+    return ReplicaEngine(engine)
+
+
+# 3. Target service requiring both specific connections
+class AnalyticsReportService:
+    def __init__(self, write_engine: PrimaryEngine, read_engine: ReplicaEngine):
+        self.write_engine = write_engine
+        self.read_engine = read_engine
+
+    def generate_report(self) -> dict:
+        # Read from replica, write results to primary
+        ...
+
+
+@inject.autoparams()
+def provide_analytics_service(
+    primary: PrimaryEngine,
+    replica: ReplicaEngine,
+) -> AnalyticsReportService:
+    return AnalyticsReportService(write_engine=primary, read_engine=replica)
+
+
+def configure(binder: inject.Binder) -> None:
+    binder.bind_to_constructor(Settings, get_settings)
+    binder.bind_to_constructor(PrimaryEngine, provide_primary_engine)
+    binder.bind_to_constructor(ReplicaEngine, provide_replica_engine)
+    binder.bind_to_constructor(AnalyticsReportService, provide_analytics_service)
+
+
+inject.configure(configure, once=True, bind_in_runtime=False)
+```
+
+### Why this is a game changer:
+1. **Zero Runtime Overhead:** At runtime, `NewType(name, BaseClass)` behaves essentially like `BaseClass` (the helper returns identity at runtime).
+2. **Complete Static Type Safety:** If a developer inadvertently passes a `ReplicaEngine` where a `PrimaryEngine` is expected, Mypy and IDEs will immediately flag a type mismatch before the code ever runs.
+3. **Flawless Autoparams Resolution:** Because `PrimaryEngine` and `ReplicaEngine` have distinct identities (`id(PrimaryEngine) != id(ReplicaEngine)`), `@inject.autoparams()` unambiguously identifies and injects the exact intended database instance.
+
+---
+
+## Best Practice 7: Frictionless Testing
 
 The real reward of following these practices comes when writing tests.
 
@@ -369,8 +465,9 @@ Dependency Injection is not an anti-pattern in Python—it is an underutilized s
 1. **Centralize bindings** in a single `di.py` module (Composition Root).
 2. **Keep domain services pure POPOs**; avoid framework decorators like `@inject.autoparams()` in business logic.
 3. **Confine `inject.instance()`** strictly to application entry points (routers, CLI commands, queue consumers).
-4. **Exclude data models, DTOs, and reusable libraries** from DI containers; reserve DI for end-application service graphs.
-5. **Leverage pure constructors** for effortless unit testing, and rebind test doubles in integration fixtures.
+4. **Use `typing.NewType`** to cleanly disambiguate multiple instances of the same class (like primary vs. replica SQLAlchemy engines) or special scalars.
+5. **Exclude data models, DTOs, and reusable libraries** from DI containers; reserve DI for end-application service graphs.
+6. **Leverage pure constructors** for effortless unit testing, and rebind test doubles in integration fixtures.
 
 Following these practices brings the architectural rigor of Spring, Symfony, and .NET to Python, giving you a clean, maintainable, and thoroughly testable codebase.
 
