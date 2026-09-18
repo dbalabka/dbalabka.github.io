@@ -12,7 +12,7 @@ pygmentsCodefencesGuessSyntax: true
 
 paginate: 50
 
-mainsections: ["presentations", "posts"]
+mainsections: ["posts", "presentations", "publications"]
 
 cascade:
   - target:
@@ -100,7 +100,23 @@ params:
     - static/css/main.css
   customJs: []
   mainSections:
-    - post
+    - posts
+    - presentations
+    - publications
+  homeSectionLimit: 3
+  homeSections:
+    - section: posts
+      title: Posts
+      url: /posts/
+      limit: 3
+    - section: presentations
+      title: Presentations
+      url: /presentations/
+      limit: 3
+    - section: publications
+      title: Publications
+      url: /publications/
+      limit: 3
   images:
     - images/site-feature-image.png
   doNotLoadAnimations: false
