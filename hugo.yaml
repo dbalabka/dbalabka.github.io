@@ -19,6 +19,14 @@ cascade:
       path: /posts/**
     params:
       comments: true
+  - target:
+      path: /presentations/**
+    params:
+      comments: true
+  - target:
+      path: /publications/**
+    params:
+      comments: true
 
 markup:
   goldmark:
