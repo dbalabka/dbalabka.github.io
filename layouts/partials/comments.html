@@ -1,0 +1,69 @@
+{{- /* Giscus Comments Partial */ -}}
+{{- $giscus := site.Params.giscus -}}
+{{- if and $giscus $giscus.repo }}
+<div class="comments" style="margin-top: 2.5rem;">
+    <div id="giscus-container"></div>
+</div>
+
+<script>
+    (function() {
+        const lightTheme = '{{ $giscus.lightTheme | default ($giscus.theme | default "light") }}';
+        const darkTheme = '{{ $giscus.darkTheme | default ($giscus.theme | default "dark") }}';
+
+        function getTheme() {
+            return document.body.classList.contains('dark') ? darkTheme : lightTheme;
+        }
+
+        function setGiscusTheme(theme) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe || !iframe.contentWindow) return;
+            iframe.contentWindow.postMessage({
+                giscus: {
+                    setConfig: {
+                        theme: theme
+                    }
+                }
+            }, 'https://giscus.app');
+        }
+
+        const container = document.getElementById('giscus-container');
+        if (container) {
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', '{{ $giscus.repo }}');
+            script.setAttribute('data-repo-id', '{{ $giscus.repoId }}');
+            script.setAttribute('data-category', '{{ $giscus.category | default "Announcements" }}');
+            script.setAttribute('data-category-id', '{{ $giscus.categoryId }}');
+            script.setAttribute('data-mapping', '{{ $giscus.mapping | default "pathname" }}');
+            script.setAttribute('data-strict', '{{ $giscus.strict | default "0" }}');
+            script.setAttribute('data-reactions-enabled', '{{ $giscus.reactionsEnabled | default "1" }}');
+            script.setAttribute('data-emit-metadata', '{{ $giscus.emitMetadata | default "0" }}');
+            script.setAttribute('data-input-position', '{{ $giscus.inputPosition | default "bottom" }}');
+            script.setAttribute('data-theme', getTheme());
+            script.setAttribute('data-lang', '{{ $giscus.lang | default "en" }}');
+            script.setAttribute('data-loading', '{{ $giscus.loading | default "lazy" }}');
+            script.crossOrigin = 'anonymous';
+            script.async = true;
+            container.appendChild(script);
+        }
+
+        // Listen for PaperMod theme change
+        const observer = new MutationObserver(function(mutations) {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    setGiscusTheme(getTheme());
+                    break;
+                }
+            }
+        });
+        observer.observe(document.body, { attributes: true });
+
+        // Listen for system theme change
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+                setGiscusTheme(getTheme());
+            });
+        }
+    })();
+</script>
+{{- end }}

@@ -14,6 +14,12 @@ paginate: 50
 
 mainsections: ["presentations", "posts"]
 
+cascade:
+  - target:
+      path: /posts/**
+    params:
+      comments: true
+
 markup:
   goldmark:
     renderer:
@@ -22,6 +28,21 @@ markup:
 params:
 
   env: development 
+
+  giscus:
+    repo: "dbalabka/dbalabka.github.io"
+    repoId: "MDEwOlJlcG9zaXRvcnkzMjA4MTU3NTA="
+    category: "Announcements"
+    categoryId: "DIC_kwDOEx9Chs4DF5IR"
+    mapping: "pathname"
+    strict: "0"
+    reactionsEnabled: "1"
+    emitMetadata: "0"
+    inputPosition: "bottom"
+    lightTheme: "light"
+    darkTheme: "dark"
+    lang: "en"
+    loading: "lazy"
 
   profileMode:
     enabled: true
